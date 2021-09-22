@@ -386,12 +386,12 @@
     "PublicBucketRootPolicy" : {
       "Type" : "AWS::S3::BucketPolicy",
       "Properties" : {
-        "Bucket" : {"Ref" : "S3BucketRootdWebsite"},
+        "Bucket" : {"Ref" : "S3BucketRootDomain"},
         "PolicyDocument": {
           "Statement":[{
             "Action":["s3:GetObject"],
             "Effect":"Allow",
-            "Resource":  { "Fn::Join" : ["", ["arn:aws:s3:::", { "Ref" : "S3BucketRootWebsite" } , "/*" ]]},
+            "Resource":  { "Fn::Join" : ["", ["arn:aws:s3:::", { "Ref" : "S3BucketRootDomain" } , "/*" ]]},
 
 
             "Principal":"*"
