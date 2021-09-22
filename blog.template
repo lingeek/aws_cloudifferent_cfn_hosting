@@ -435,7 +435,7 @@
         "HostedZoneId":{"Fn::ImportValue":{
           "Fn::Sub":"Export::${TAGEnvironment}-BlogZoneID"
         }} ,
-        "Name": {"Ref": "BlogDomainName"},
+        "Name": {"Ref": "SubDomainName"},
         "Type": "A"
       }
     }
