@@ -1,0 +1,443 @@
+{
+  "AWSTemplateFormatVersion": "2010-09-09",
+  "Description": "Cloudifferent static website hosting on S3.",
+
+  "Parameters": {
+    "RootDomainName": {
+      "Description": "Domain name used for bucket name and Route53 Entry.",
+      "Type": "String",
+      "ConstraintDescription": "must specify domain name.",
+      "AllowedValues": [
+       "cloudifferent.com"
+      ],
+      "Default": "cloudifferent.com"
+    },
+    "SubDomainName": {
+      "Description": "Domain name used for bucket name and Route53 Entry.",
+      "Type": "String",
+      "ConstraintDescription": "must specify domain name.",
+      "AllowedValues": [
+        "blog.cloudifferent.com"
+      ],
+      "Default": "blog.cloudifferent.com"
+    },
+    "IndexDocument": {
+      "Description": "Index Document which is called if no other path is specified.",
+      "Type": "String",
+      "Default": "index.html"
+    },
+    "ErrorDocument": {
+      "Description": "Document which is shown in case of an error.",
+      "Type": "String",
+      "Default": "error.html"
+    },
+    "Custom404ErrorPage": {
+      "Description": "Document which is shown in case of a 404 error.",
+      "Type": "String",
+      "Default": "404.html"
+    },
+    "PriceClass": {
+      "Description": "Worldwide (PriceClass_All); World without South America and Australia (PriceClass_200); US, EU, Canada (PriceClass_100)",
+      "Type": "String",
+      "AllowedValues": [
+        "PriceClass_All",
+        "PriceClass_200",
+        "PriceClass_100"
+      ],
+      "Default": "PriceClass_100"
+    },
+    "UseDefaultTLSCertificate": {
+      "Description": "Use the default certificate for HTTPS connections? For Production use DO NOT use the default certificate.",
+      "Type": "String",
+      "AllowedValues": [
+        "true",
+        "false"
+      ],
+      "Default": "false"
+    },
+    "CertificateArn": {
+      "Description": "If you don't want to use a default certificate, specify the ARN of a ACM certificate in US-East-1.",
+      "Type": "String"
+    },
+    "HostedZoneId": {
+      "Description": "The hosted zone",
+      "Type": "AWS::Route53::HostedZone::Id"
+    },
+    "LoggingBucket": {
+      "Description": "The Bucket where to store the CloudFront Logs.",
+      "Type": "String"
+    },
+    "LoggingPrefix": {
+      "Description": "The Prefix for log files.",
+      "Default": "cloudfront",
+      "Type": "String"
+    },
+    "TAGProject": {
+      "Description": "Business TAG - Project name",
+      "Type": "String",
+      "Default": "project-cloudifferent"
+    },
+    "TAGEnvironment": {
+      "Description": "This is the Cloudifferent environment.",
+      "Type": "String",
+      "AllowedValues": [
+        "production",
+        "test",
+        "stage"
+      ],
+      "Default": "production"
+    },
+    "TAGtechcontactname": {
+      "Description": "Technical TAGS - Technical contact name",
+      "Type": "String"
+
+
+    },
+    "TAGtechcontactemail": {
+      "Description": "Technical TAGS - Technical contact email",
+      "Type": "String"
+
+    },
+    "TAGtechcontactphone": {
+      "Description": "Technical TAGS - Technical contact phone",
+      "Type": "String"
+
+    },
+    "TAGaccountingcostcenter": {
+      "Description": "Accounting TAG - Billing cost center",
+      "Type": "String",
+      "Default": "1000"
+    },
+    "TAGbusinessunit": {
+      "Description": "Accounting TAG - Business unit",
+      "Type": "String",
+      "Default": ""
+    },
+    "TAGbillingowner": {
+      "Description": "Business TAG - Billing owner",
+      "Type": "String",
+      "Default": "cloudifferent"
+    },
+    "TAGbusinesscontactname": {
+      "Description": "Business TAGS - Business contact name",
+      "Type": "String"
+    },
+    "TAGbusinesscontactemail": {
+      "Description": "Business TAGS - Business contact email",
+      "Type": "String"
+    },
+    "TAGbusinesscontactphone": {
+      "Description": "Business TAGS - Business contact phone",
+      "Type": "String"
+    },
+    "TAGsecdataclassification": {
+      "Description": "Security TAGS - Data classification",
+      "Type": "String",
+      "AllowedValues": [
+        "1",
+        "2",
+        "3"
+      ],
+      "Default": "1"
+    },
+    "TAGseccomplianceresidency": {
+      "Description": "Security TAGS - Data residency",
+      "Type": "String",
+      "AllowedValues": [
+        "germany",
+        "ireland",
+        "us",
+        "canada"
+      ],
+      "Default": "us"
+    },
+    "TAGsecpriority": {
+      "Description": "Security TAGS - Security impact",
+      "Type": "String",
+      "AllowedValues": [
+        "priority1",
+        "priority2",
+        "priority3"
+      ],
+      "Default": "priority3"
+    }
+
+  },
+
+  "Resources": {
+    "S3BucketRootDomain" : {
+      "Type" : "AWS::S3::Bucket",
+      "DeletionPolicy" : "Delete",
+
+      "Metadata" : {
+        "Comment1" : "Root  Bucket",
+        "Comment2" : "This bucket is PUBLIC."
+
+      },
+      "Properties": {
+        "BucketName": {"Ref": "RootDomainName"},
+        "WebsiteConfiguration": {
+          "IndexDocument": {"Ref": "IndexDocument"}
+        },
+       "Tags": [
+          {
+            "Key": "Name",
+            "Value": {"Fn::Join": ["",["s3-",{"Ref": "TAGProject"}]]}},
+          {
+            "Key": "cloudifferent:name",
+            "Value": {"Fn::Join": ["",["s3-",{"Ref": "TAGProject"}]]}},
+          {
+            "Key": "cloudifferent:info:project",
+            "Value": {
+              "Ref": "TAGProject"
+            }
+          },
+         {
+            "Key": "cloudifferent:info:environment",
+            "Value": {
+              "Ref": "TAGEnvironment"
+            }
+          },
+          {
+            "Key": "cloudifferent:technical:contact-name",
+            "Value": {
+              "Ref": "TAGtechcontactname"
+            }
+          },
+          {
+            "Key": "cloudifferent:technical:contact-email",
+            "Value": {
+              "Ref": "TAGtechcontactemail"
+            }
+          },
+          {
+            "Key": "cloudifferent:technical:contact-phone",
+            "Value": {
+              "Ref": "TAGtechcontactphone"
+            }
+          },
+          {
+            "Key": "cloudifferent:accounting:costcenter",
+            "Value": {
+              "Ref": "TAGaccountingcostcenter"
+            }
+          },
+          {
+            "Key": "cloudifferent:accounting:owner",
+            "Value": {
+              "Ref": "TAGbillingowner"
+            }
+          },
+          {
+            "Key": "cloudifferent:accounting:costcenter",
+            "Value": {
+              "Ref": "TAGaccountingcostcenter"
+            }
+          },
+          {
+            "Key": "cloudifferent:business:contact-name",
+            "Value": {
+              "Ref": "TAGbusinesscontactname"
+            }
+          },
+          {
+            "Key": "cloudifferent:business:contact-email",
+            "Value": {
+              "Ref": "TAGbusinesscontactemail"
+            }
+          },
+          {
+            "Key": "cloudifferent:business:contact-phone",
+            "Value": {
+              "Ref": "TAGbusinesscontactphone"
+            }
+          },
+          {
+            "Key": "cloudifferent:dataClassification",
+            "Value": {
+              "Ref": "TAGsecdataclassification"
+            }
+          },
+          {
+            "Key": "cloudifferent:compliance:dataresidency",
+            "Value": {
+              "Ref": "TAGseccomplianceresidency"
+            }
+          },
+          {
+            "Key": "cloudifferent:priority",
+            "Value": {
+              "Ref": "TAGsecpriority"
+            }
+          }
+
+        ]
+      }
+    },
+    "S3BucketSubDomain" : {
+      "Type" : "AWS::S3::Bucket",
+      "DeletionPolicy" : "Delete",
+
+      "Metadata" : {
+        "Comment1" : "Subdomain bucket.",
+        "Comment2" : "This bucket is PUBLIC."
+
+      },
+      "Properties": {
+        "BucketName": {"Ref": "SubDomainName"},
+        "WebsiteConfiguration": {
+          "IndexDocument": {"Ref": "IndexDocument"}
+        },
+        "Tags": [
+          {
+            "Key": "Name",
+            "Value": {"Fn::Join": ["",["s3-",{"Ref": "TAGProject"}]]}},
+          {
+            "Key": "cloudifferent:name",
+            "Value": {"Fn::Join": ["",["s3-",{"Ref": "TAGProject"}]]}},
+          {
+            "Key": "cloudifferent:info:project",
+            "Value": {
+              "Ref": "TAGProject"
+            }
+          },
+          {
+            "Key": "cloudifferent:info:environment",
+            "Value": {
+              "Ref": "TAGEnvironment"
+            }
+          },
+          {
+            "Key": "cloudifferent:technical:contact-name",
+            "Value": {
+              "Ref": "TAGtechcontactname"
+            }
+          },
+          {
+            "Key": "cloudifferent:technical:contact-email",
+            "Value": {
+              "Ref": "TAGtechcontactemail"
+            }
+          },
+          {
+            "Key": "cloudifferent:technical:contact-phone",
+            "Value": {
+              "Ref": "TAGtechcontactphone"
+            }
+          },
+          {
+            "Key": "cloudifferent:accounting:costcenter",
+            "Value": {
+              "Ref": "TAGaccountingcostcenter"
+            }
+          },
+          {
+            "Key": "cloudifferent:accounting:owner",
+            "Value": {
+              "Ref": "TAGbillingowner"
+            }
+          },
+          {
+            "Key": "cloudifferent:accounting:costcenter",
+            "Value": {
+              "Ref": "TAGaccountingcostcenter"
+            }
+          },
+          {
+            "Key": "cloudifferent:business:contact-name",
+            "Value": {
+              "Ref": "TAGbusinesscontactname"
+            }
+          },
+          {
+            "Key": "cloudifferent:business:contact-email",
+            "Value": {
+              "Ref": "TAGbusinesscontactemail"
+            }
+          },
+          {
+            "Key": "cloudifferent:business:contact-phone",
+            "Value": {
+              "Ref": "TAGbusinesscontactphone"
+            }
+          },
+          {
+            "Key": "cloudifferent:dataClassification",
+            "Value": {
+              "Ref": "TAGsecdataclassification"
+            }
+          },
+          {
+            "Key": "cloudifferent:compliance:dataresidency",
+            "Value": {
+              "Ref": "TAGseccomplianceresidency"
+            }
+          },
+          {
+            "Key": "cloudifferent:priority",
+            "Value": {
+              "Ref": "TAGsecpriority"
+            }
+          }
+
+        ]
+      }
+    },
+    "PublicBucketRootPolicy" : {
+      "Type" : "AWS::S3::BucketPolicy",
+      "Properties" : {
+        "Bucket" : {"Ref" : "S3BucketRootdWebsite"},
+        "PolicyDocument": {
+          "Statement":[{
+            "Action":["s3:GetObject"],
+            "Effect":"Allow",
+            "Resource":  { "Fn::Join" : ["", ["arn:aws:s3:::", { "Ref" : "S3BucketRootWebsite" } , "/*" ]]},
+
+
+            "Principal":"*"
+
+
+          }]
+        }
+      }
+    },
+    "Route53DNSRecordSetRoot": {
+      "Type": "AWS::Route53::RecordSet",
+      "Properties": {
+        "AliasTarget": {
+          "DNSName": {"Ref": "S3BucketRootDomain"},
+          "HostedZoneId": {
+            "Fn::ImportValue":{
+              "Fn::Sub":"Export::${TAGEnvironment}-RootZoneID"
+            }
+          }
+        },
+        "Comment": "Alias Record to S3 Root bucket.",
+        "HostedZoneId":{"Fn::ImportValue":{
+          "Fn::Sub":"Export::${TAGEnvironment}-RootZoneID"
+        }} ,
+        "Name": {"Ref": "RootDomainName"},
+        "Type": "A"
+      }
+    },
+    "Route53DNSRecordSetSubDomain": {
+      "Type": "AWS::Route53::RecordSet",
+      "Properties": {
+        "AliasTarget": {
+          "DNSName": {"Ref": "S3BucketSubDomain"},
+          "HostedZoneId": {
+            "Fn::ImportValue":{
+              "Fn::Sub":"Export::${TAGEnvironment}-BlogZoneID"
+            }
+          }
+        },
+        "Comment": "Alias Record to S3 Sbdomain bucket.",
+        "HostedZoneId":{"Fn::ImportValue":{
+          "Fn::Sub":"Export::${TAGEnvironment}-BlogZoneID"
+        }} ,
+        "Name": {"Ref": "BlogDomainName"},
+        "Type": "A"
+      }
+    }
+  }
+}
