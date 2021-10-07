@@ -36,41 +36,9 @@
       "Type": "String",
       "Default": "404.html"
     },
-    "PriceClass": {
-      "Description": "Worldwide (PriceClass_All); World without South America and Australia (PriceClass_200); US, EU, Canada (PriceClass_100)",
-      "Type": "String",
-      "AllowedValues": [
-        "PriceClass_All",
-        "PriceClass_200",
-        "PriceClass_100"
-      ],
-      "Default": "PriceClass_100"
-    },
-    "UseDefaultTLSCertificate": {
-      "Description": "Use the default certificate for HTTPS connections? For Production use DO NOT use the default certificate.",
-      "Type": "String",
-      "AllowedValues": [
-        "true",
-        "false"
-      ],
-      "Default": "false"
-    },
-    "CertificateArn": {
-      "Description": "If you don't want to use a default certificate, specify the ARN of a ACM certificate in US-East-1.",
-      "Type": "String"
-    },
     "HostedZoneId": {
       "Description": "The hosted zone",
       "Type": "AWS::Route53::HostedZone::Id"
-    },
-    "LoggingBucket": {
-      "Description": "The Bucket where to store the CloudFront Logs.",
-      "Type": "String"
-    },
-    "LoggingPrefix": {
-      "Description": "The Prefix for log files.",
-      "Default": "cloudfront",
-      "Type": "String"
     },
     "TAGProject": {
       "Description": "Business TAG - Project name",
@@ -110,8 +78,8 @@
     },
     "TAGbusinessunit": {
       "Description": "Accounting TAG - Business unit",
-      "Type": "String",
-      "Default": ""
+      "Type": "String"
+
     },
     "TAGbillingowner": {
       "Description": "Business TAG - Billing owner",
@@ -134,11 +102,10 @@
       "Description": "Security TAGS - Data classification",
       "Type": "String",
       "AllowedValues": [
-        "1",
-        "2",
-        "3"
-      ],
-      "Default": "1"
+        "Tier1",
+        "Tier2",
+        "Tier3"
+      ]
     },
     "TAGseccomplianceresidency": {
       "Description": "Security TAGS - Data residency",
@@ -148,8 +115,7 @@
         "ireland",
         "us",
         "canada"
-      ],
-      "Default": "us"
+      ]
     },
     "TAGsecpriority": {
       "Description": "Security TAGS - Security impact",
@@ -158,8 +124,7 @@
         "priority1",
         "priority2",
         "priority3"
-      ],
-      "Default": "priority3"
+      ]
     }
 
   },
@@ -408,13 +373,13 @@
           "DNSName": {"Ref": "S3BucketRootDomain"},
           "HostedZoneId": {
             "Fn::ImportValue":{
-              "Fn::Sub":"Export::${TAGEnvironment}-RootZoneID"
+              "Fn::Sub":"Export::${TAGEnvironment}-NSZoneID"
             }
           }
         },
         "Comment": "Alias Record to S3 Root bucket.",
         "HostedZoneId":{"Fn::ImportValue":{
-          "Fn::Sub":"Export::${TAGEnvironment}-RootZoneID"
+          "Fn::Sub":"Export::${TAGEnvironment}-NSZoneID"
         }} ,
         "Name": {"Ref": "RootDomainName"},
         "Type": "A"
