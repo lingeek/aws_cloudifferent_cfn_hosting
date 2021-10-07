@@ -124,115 +124,7 @@
   },
 
   "Resources": {
-    "S3BucketRootDomain" : {
-      "Type" : "AWS::S3::Bucket",
-      "DeletionPolicy" : "Delete",
 
-      "Metadata" : {
-        "Comment1" : "Root  Bucket",
-        "Comment2" : "This bucket is PUBLIC."
-
-      },
-      "Properties": {
-        "BucketName": {"Ref": "RootDomainName"},
-        "WebsiteConfiguration": {
-          "IndexDocument": {"Ref": "IndexDocument"}
-        },
-       "Tags": [
-          {
-            "Key": "Name",
-            "Value": {"Fn::Join": ["",["s3-",{"Ref": "TAGProject"}]]}},
-          {
-            "Key": "cloudifferent:name",
-            "Value": {"Fn::Join": ["",["s3-",{"Ref": "TAGProject"}]]}},
-          {
-            "Key": "cloudifferent:info:project",
-            "Value": {
-              "Ref": "TAGProject"
-            }
-          },
-         {
-            "Key": "cloudifferent:info:environment",
-            "Value": {
-              "Ref": "TAGEnvironment"
-            }
-          },
-          {
-            "Key": "cloudifferent:technical:contact-name",
-            "Value": {
-              "Ref": "TAGtechcontactname"
-            }
-          },
-          {
-            "Key": "cloudifferent:technical:contact-email",
-            "Value": {
-              "Ref": "TAGtechcontactemail"
-            }
-          },
-          {
-            "Key": "cloudifferent:technical:contact-phone",
-            "Value": {
-              "Ref": "TAGtechcontactphone"
-            }
-          },
-          {
-            "Key": "cloudifferent:accounting:costcenter",
-            "Value": {
-              "Ref": "TAGaccountingcostcenter"
-            }
-          },
-          {
-            "Key": "cloudifferent:accounting:owner",
-            "Value": {
-              "Ref": "TAGbillingowner"
-            }
-          },
-          {
-            "Key": "cloudifferent:accounting:costcenter",
-            "Value": {
-              "Ref": "TAGaccountingcostcenter"
-            }
-          },
-          {
-            "Key": "cloudifferent:business:contact-name",
-            "Value": {
-              "Ref": "TAGbusinesscontactname"
-            }
-          },
-          {
-            "Key": "cloudifferent:business:contact-email",
-            "Value": {
-              "Ref": "TAGbusinesscontactemail"
-            }
-          },
-          {
-            "Key": "cloudifferent:business:contact-phone",
-            "Value": {
-              "Ref": "TAGbusinesscontactphone"
-            }
-          },
-          {
-            "Key": "cloudifferent:dataClassification",
-            "Value": {
-              "Ref": "TAGsecdataclassification"
-            }
-          },
-          {
-            "Key": "cloudifferent:compliance:dataresidency",
-            "Value": {
-              "Ref": "TAGseccomplianceresidency"
-            }
-          },
-          {
-            "Key": "cloudifferent:priority",
-            "Value": {
-              "Ref": "TAGsecpriority"
-            }
-          }
-
-        ]
-      }
-    },
     "S3BucketSubDomain" : {
       "Type" : "AWS::S3::Bucket",
       "DeletionPolicy" : "Delete",
@@ -342,15 +234,15 @@
         ]
       }
     },
-    "PublicBucketRootPolicy" : {
+    "PublicBucketSubPolicy" : {
       "Type" : "AWS::S3::BucketPolicy",
       "Properties" : {
-        "Bucket" : {"Ref" : "S3BucketRootDomain"},
+        "Bucket" : {"Ref" : "S3BucketSubDomain"},
         "PolicyDocument": {
           "Statement":[{
             "Action":["s3:GetObject"],
             "Effect":"Allow",
-            "Resource":  { "Fn::Join" : ["", ["arn:aws:s3:::", { "Ref" : "S3BucketRootDomain" } , "/*" ]]},
+            "Resource":  { "Fn::Join" : ["", ["arn:aws:s3:::", { "Ref" : "S3BucketSubDomain" } , "/*" ]]},
 
 
             "Principal":"*"
