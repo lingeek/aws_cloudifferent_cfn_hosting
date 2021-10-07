@@ -98,7 +98,6 @@
     "TAGsecdataclassification": {
       "Description": "Security TAGS - Data classification",
       "Type": "String",
-      "AllowedValues": [ "Tier1","Tier2","Tier3" ],
       "Default": "Tier1"
     },
     "TAGseccomplianceresidency": {
