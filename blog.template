@@ -360,25 +360,7 @@
         }
       }
     },
-    "Route53DNSRecordSetRoot": {
-      "Type": "AWS::Route53::RecordSet",
-      "Properties": {
-        "AliasTarget": {
-          "DNSName": {"Ref": "S3BucketRootDomain"},
-          "HostedZoneId": {
-            "Fn::ImportValue":{
-              "Fn::Sub":"Export::${TAGEnvironment}-NSZoneID"
-            }
-          }
-        },
-        "Comment": "Alias Record to S3 Root bucket.",
-        "HostedZoneId":{"Fn::ImportValue":{
-          "Fn::Sub":"Export::${TAGEnvironment}-NSZoneID"
-        }} ,
-        "Name": {"Ref": "RootDomainName"},
-        "Type": "A"
-      }
-    },
+
     "Route53DNSRecordSetSubDomain": {
       "Type": "AWS::Route53::RecordSet",
       "Properties": {
