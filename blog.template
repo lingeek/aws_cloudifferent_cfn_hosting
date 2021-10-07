@@ -258,10 +258,10 @@
       "Properties": {
         "AliasTarget": {
           "DNSName": {"Ref": "S3BucketSubDomain"},
-          "HostedZoneId": "Z3BJ6K6RIION7M"
+          "HostedZoneId": "Z06179213VI935JL5LS3S",
         },
         "Comment": "Alias Record to S3 Subdomain bucket.",
-        "HostedZoneId":"Z06179213VI935JL5LS3S" ,
+        "HostedZoneId":"Z3BJ6K6RIION7M" ,
         "Name": {"Ref": "SubDomainName"},
         "Type": "A"
       }
