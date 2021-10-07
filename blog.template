@@ -258,14 +258,12 @@
       "Properties": {
         "AliasTarget": {
           "DNSName": {"Ref": "S3BucketSubDomain"},
-          "HostedZoneId": {
-            "Fn::ImportValue":{
-              "Fn::Sub":"Export::${TAGEnvironment}-NSZoneID"
-            }
-          }
+          "HostedZoneId": "Z3BJ6K6RIION7M"
         },
         "Comment": "Alias Record to S3 Subdomain bucket.",
-        "HostedZoneId": "Z3BJ6K6RIION7M" ,
+        "HostedZoneId":{"Fn::ImportValue":{
+          "Fn::Sub":"Export::${TAGEnvironment}-NSZoneID"
+        }} ,
         "Name": {"Ref": "SubDomainName"},
         "Type": "A"
       }
