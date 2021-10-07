@@ -36,10 +36,7 @@
       "Type": "String",
       "Default": "404.html"
     },
-    "HostedZoneId": {
-      "Description": "The hosted zone",
-      "Type": "AWS::Route53::HostedZone::Id"
-    },
+
     "TAGProject": {
       "Description": "Business TAG - Project name",
       "Type": "String",
@@ -392,13 +389,13 @@
           "DNSName": {"Ref": "S3BucketSubDomain"},
           "HostedZoneId": {
             "Fn::ImportValue":{
-              "Fn::Sub":"Export::${TAGEnvironment}-BlogZoneID"
+              "Fn::Sub":"Export::${TAGEnvironment}-NSZoneID"
             }
           }
         },
-        "Comment": "Alias Record to S3 Sbdomain bucket.",
+        "Comment": "Alias Record to S3 Subdomain bucket.",
         "HostedZoneId":{"Fn::ImportValue":{
-          "Fn::Sub":"Export::${TAGEnvironment}-BlogZoneID"
+          "Fn::Sub":"Export::${TAGEnvironment}-NSZoneID"
         }} ,
         "Name": {"Ref": "SubDomainName"},
         "Type": "A"
