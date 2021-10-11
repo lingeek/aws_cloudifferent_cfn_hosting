@@ -8,7 +8,7 @@
       "Type": "String",
       "ConstraintDescription": "must specify domain name.",
       "AllowedValues": [
-       "cloudifferent.com"
+       "cloudifferent.com."
       ],
       "Default": "cloudifferent.com"
     },
@@ -253,17 +253,28 @@
       }
     },
 
-    "Route53DNSRecordSetSubDomain": {
-      "Type": "AWS::Route53::RecordSet",
-      "Properties": {
-        "AliasTarget": {
-          "DNSName": {"Ref": "S3BucketSubDomain"},
-          "HostedZoneId": "Z3BJ6K6RIION7M"
+
+    "ComponentRoute53SSUBDOMAIN":{
+      "Type":"AWS::Route53::RecordSetGroup",
+      "Properties":{
+        "HostedZoneName":{
+          "Ref":"RootDomainName"
         },
-        "Comment": "Alias Record to S3 Subdomain bucket.",
-        "HostedZoneName": "cloudifferent.com.",
-        "Name": {"Ref": "SubDomainName"},
-        "Type": "A"
+        "RecordSets":[
+          {
+            "Name":{
+              "Ref":"SubDomainName"
+            },
+            "Type":"A",
+            "AliasTarget":{
+              "HostedZoneId":{
+                "DNSName": {"Ref": "S3BucketSubDomain"},
+                "HostedZoneId": "Z3BJ6K6RIION7M"
+              },
+              "DNSName":{"Ref": "S3BucketSubDomain"}
+            }
+          }
+        ]
       }
     }
   }
