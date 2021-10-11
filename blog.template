@@ -261,7 +261,7 @@
           "HostedZoneId": "Z3BJ6K6RIION7M"
         },
         "Comment": "Alias Record to S3 Subdomain bucket.",
-        "HostedZoneName": "cloudifferent.com",
+        "HostedZoneName": "cloudifferent.com.",
         "Name": {"Ref": "SubDomainName"},
         "Type": "A"
       }
