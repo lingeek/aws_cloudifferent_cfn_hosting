@@ -43,7 +43,7 @@
       "Type": "String",
       "ConstraintDescription": "must specify domain name.",
       "AllowedValues": [
-       "cloudifferent.com"
+        "cloudifferent.com"
       ],
       "Default": "cloudifferent.com"
     },
@@ -71,7 +71,6 @@
       "Type": "String",
       "Default": "404.html"
     },
-
     "TAGProject": {
       "Description": "Business TAG - Project name",
       "Type": "String",
@@ -90,18 +89,14 @@
     "TAGtechcontactname": {
       "Description": "Technical TAGS - Technical contact name",
       "Type": "String"
-
-
     },
     "TAGtechcontactemail": {
       "Description": "Technical TAGS - Technical contact email",
       "Type": "String"
-
     },
     "TAGtechcontactphone": {
       "Description": "Technical TAGS - Technical contact phone",
       "Type": "String"
-
     },
     "TAGaccountingcostcenter": {
       "Description": "Accounting TAG - Billing cost center",
@@ -111,7 +106,6 @@
     "TAGbusinessunit": {
       "Description": "Accounting TAG - Business unit",
       "Type": "String"
-
     },
     "TAGbillingowner": {
       "Description": "Business TAG - Billing owner",
@@ -133,8 +127,11 @@
     "TAGsecdataclassification": {
       "Description": "Security TAGS - Data classification",
       "Type": "String",
-      "AllowedValues": [ "Tier1","Tier2","Tier3" ]
-
+      "AllowedValues": [
+        "Tier1",
+        "Tier2",
+        "Tier3"
+      ]
     },
     "TAGseccomplianceresidency": {
       "Description": "Security TAGS - Data residency",
@@ -155,40 +152,64 @@
         "priority3"
       ]
     }
-
   },
-
   "Resources": {
-
-    "S3BucketSubDomain" : {
-      "Type" : "AWS::S3::Bucket",
-      "DeletionPolicy" : "Delete",
-      "Metadata" : {
-        "Comment1" : "Subdomain bucket.",
-        "Comment2" : "This bucket is PUBLIC."
-
+    "S3BucketSubDomain": {
+      "Type": "AWS::S3::Bucket",
+      "DeletionPolicy": "Delete",
+      "Metadata": {
+        "Comment1": "Subdomain bucket.",
+        "Comment2": "This bucket is PUBLIC."
       },
       "Properties": {
-        "BucketName": {"Fn::Join": [".",
-          [{
-            "Ref": "SubDomainName"
-          },
-            {
-              "Ref": "RootDomainName"
-            }]]
-        }
-      },
-      "AccessControl": "BucketOwnerFullControl",
+        "BucketName": {
+          "Fn::Join": [
+            ".",
+            [
+              {
+                "Ref": "SubDomainName"
+              },
+              {
+                "Ref": "RootDomainName"
+              }
+            ]
+          ]
+        },
+        "AccessControl": "BucketOwnerFullControl",
         "WebsiteConfiguration": {
-          "IndexDocument": {"Ref": "IndexDocument"}
+          "IndexDocument": {
+            "Ref": "IndexDocument"
+          }
         },
         "Tags": [
           {
             "Key": "Name",
-            "Value": {"Fn::Join": ["",["s3-",{"Ref": "TAGProject"}]]}},
+            "Value": {
+              "Fn::Join": [
+                "",
+                [
+                  "s3-",
+                  {
+                    "Ref": "TAGProject"
+                  }
+                ]
+              ]
+            }
+          },
           {
             "Key": "cloudifferent:name",
-            "Value": {"Fn::Join": ["",["s3-",{"Ref": "TAGProject"}]]}},
+            "Value": {
+              "Fn::Join": [
+                "",
+                [
+                  "s3-",
+                  {
+                    "Ref": "TAGProject"
+                  }
+                ]
+              ]
+            }
+          },
           {
             "Key": "cloudifferent:info:project",
             "Value": {
@@ -273,75 +294,104 @@
               "Ref": "TAGsecpriority"
             }
           }
-
         ]
-      },
-
-    "PublicBucketSubPolicy" : {
-      "Type" : "AWS::S3::BucketPolicy",
-      "Properties" : {
-        "Bucket" : {"Ref" : "S3BucketSubDomain"},
-        "PolicyDocument": {
-          "Statement":[{
-            "Action":["s3:GetObject"],
-            "Effect":"Allow",
-            "Resource":  { "Fn::Join" : ["", ["arn:aws:s3:::", { "Ref" : "S3BucketSubDomain" } , "/*" ]]},
-
-
-            "Principal":"*"
-
-
-          }]
-        }
       }
     },
-
-
-
-    "BlogDNSEntry": {
-      "Type": "AWS::Route53::RecordSetGroup",
-      "DependsOn": "S3BucketSubDomain",
-      "Properties": {
-        "HostedZoneName": {
-          "Fn::Join": ["",
-            [{
-              "Ref": "RootDomainName"
-            },
-              "."]]
-        },
-        "Comment": "Alias for site name to S3 bucket.",
-        "RecordSets": [{
-          "Name": {
-            "Fn::Join": [".",
-              [{
-                "Ref": "SubDomainName"
-              },
-                {
-                  "Ref": "RootDomainName"
-                }]]
+      "PublicBucketSubPolicy": {
+        "Type": "AWS::S3::BucketPolicy",
+        "Properties": {
+          "Bucket": {
+            "Ref": "S3BucketSubDomain"
           },
-          "Type": "CNAME",
-          "TTL": "900",
-          "ResourceRecords": [{
-            "Fn::Join": ["",
-              [{
-                "Ref": "SubDomainName"
-              },
-                ".",
+          "PolicyDocument": {
+            "Statement": [
+              {
+                "Action": [
+                  "s3:GetObject"
+                ],
+                "Effect": "Allow",
+                "Resource": {
+                  "Fn::Join": [
+                    "",
+                    [
+                      "arn:aws:s3:::",
+                      {
+                        "Ref": "S3BucketSubDomain"
+                      },
+                      "/*"
+                    ]
+                  ]
+                },
+                "Principal": "*"
+              }
+            ]
+          }
+        }
+      },
+      "BlogDNSEntry": {
+        "Type": "AWS::Route53::RecordSetGroup",
+        "DependsOn": "S3BucketSubDomain",
+        "Properties": {
+          "HostedZoneName": {
+            "Fn::Join": [
+              "",
+              [
                 {
                   "Ref": "RootDomainName"
                 },
-                ".",
-                {
-                  "Fn::FindInMap": ["RegionMap",
+                "."
+              ]
+            ]
+          },
+          "Comment": "Alias for site name to S3 bucket.",
+          "RecordSets": [
+            {
+              "Name": {
+                "Fn::Join": [
+                  ".",
+                  [
                     {
-                      "Ref": "AWS::Region"
+                      "Ref": "SubDomainName"
                     },
-                    "websiteendpoint"]
-                }]]
-          }]
-        }]
+                    {
+                      "Ref": "RootDomainName"
+                    }
+                  ]
+                ]
+              },
+              "Type": "CNAME",
+              "TTL": "900",
+              "ResourceRecords": [
+                {
+                  "Fn::Join": [
+                    "",
+                    [
+                      {
+                        "Ref": "SubDomainName"
+                      },
+                      ".",
+                      {
+                        "Ref": "RootDomainName"
+                      },
+                      ".",
+                      {
+                        "Fn::FindInMap": [
+                          "RegionMap",
+                          {
+                            "Ref": "AWS::Region"
+                          },
+                          "websiteendpoint"
+                        ]
+                      }
+                    ]
+                  ]
+                }
+              ]
+            }
+          ]
+        }
       }
-    }
-    }
+
   }
+}
+
