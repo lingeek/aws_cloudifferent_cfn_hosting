@@ -10,7 +10,7 @@
       "AllowedValues": [
        "cloudifferent.com."
       ],
-      "Default": "cloudifferent.com"
+      "Default": "cloudifferent.com."
     },
     "SubDomainName": {
       "Description": "Domain name used for bucket name and Route53 Entry.",
