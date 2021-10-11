@@ -163,14 +163,22 @@
     "S3BucketSubDomain" : {
       "Type" : "AWS::S3::Bucket",
       "DeletionPolicy" : "Delete",
-
       "Metadata" : {
         "Comment1" : "Subdomain bucket.",
         "Comment2" : "This bucket is PUBLIC."
 
       },
       "Properties": {
-        "BucketName": {"Ref": "SubDomainName"},
+        "BucketName": {"Fn::Join": [".",
+          [{
+            "Ref": "SubDomainName"
+          },
+            {
+              "Ref": "RootDomainName"
+            }]]
+        }
+      },
+      "AccessControl": "BucketOwnerFullControl",
         "WebsiteConfiguration": {
           "IndexDocument": {"Ref": "IndexDocument"}
         },
@@ -267,8 +275,8 @@
           }
 
         ]
-      }
-    },
+      },
+
     "PublicBucketSubPolicy" : {
       "Type" : "AWS::S3::BucketPolicy",
       "Properties" : {
