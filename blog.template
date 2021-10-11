@@ -257,9 +257,7 @@
     "ComponentRoute53SSUBDOMAIN":{
       "Type":"AWS::Route53::RecordSetGroup",
       "Properties":{
-        "HostedZoneName":{
-          "Ref":"RootDomainName"
-        },
+        "HostedZoneName": "cloudifferent.com.",
         "RecordSets":[
           {
             "Name":{
